@@ -65,9 +65,8 @@ function wp_list_display_plugin_admin_page() {
   	$sanedb = new SaneDb($wpdb);
 
     echo '<div class="wrap">';
-    echo '<p>wp_listプラグインの管理画面</p>';
-    echo $sanedb->getDbName() . "<br>";;
-    echo $sanedb->getDbPass() . "<br>";;
+    echo '<p>WordPress Site List プラグイン 管理画面</p>';
+    echo "[" . $sanedb->getDbHost() . "] db list<br>";;
     echo '</div>';
 
     echo "<table border=1>";
