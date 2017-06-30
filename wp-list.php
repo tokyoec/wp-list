@@ -30,25 +30,21 @@ class SaneDb
 {
     private $_oDb;
 
-    public function __construct(wpdb $oDb)
-    {
+    public function __construct(wpdb $oDb) {
         $this->_oDb = $oDb;
     }
 
-    public function __get($sField)
-    {
+    public function __get($sField) {
         if($sField != '_oDb')
             return $this->_oDb->$sField;
     }
 
-    public function __set($sField, $mValue)
-    {
+    public function __set($sField, $mValue) {
         if($sField != '_oDb')
             $this->_oDb->$sField = $mValue;
     }
 
-    public function __call($sMethod, array $aArgs)
-    {
+    public function __call($sMethod, array $aArgs) {
         return call_user_func_array(array($this->_oDb, $sMethod), $aArgs);
     }
 
@@ -110,12 +106,9 @@ function wp_list_display_db_list() {
 
     // MySQLから切断する
     mysqli_close($conn);
-
-    exit(0);
 }
 
-wp_list_display_site_list()
-{
+function wp_list_display_site_list() {
     $result = array();
 		$cmd = "locate wp-includes/version.php";
 		exec($cmd, $result);
@@ -318,7 +311,6 @@ function show_wp_info($wpconfig, $is_xoops) {
 				echo $match1[1];
 		}
 		echo "</td>";
-
 }
 
 function get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, $option_name) {
@@ -354,8 +346,5 @@ function get_wpmu_option_value($db_host, $db_name, $db_user, $db_pass, $table_pr
 				mysqli_free_result($result);
 		}
 }
-
-
-
 
 ?>
