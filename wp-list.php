@@ -71,12 +71,12 @@ function wp_list_display_db_list() {
     echo "[" . $sanedb->getDbHost() . "] DB List<br>";;
 
     echo "<table class=\"wp-list-table widefat striped pages\">";
-    echo "<tr>";
-    echo "<td> DB Name </td>";
-    echo "<td> WP home </td>";
-    echo "<td> WP blog name </td>";
-    echo "<td> WP blog description </td>";
-    echo "</tr>";
+    echo "<thead><tr>";
+    echo "<th> DB Name </th>";
+    echo "<th> WP home </th>";
+    echo "<th> WP blog name </th>";
+    echo "<th> WP blog description </th>";
+    echo "</tr></thead>";
 
     $db_host = $sanedb->getDbHost();
     $db_user = $sanedb->getDbUser();
@@ -123,21 +123,21 @@ function wp_list_display_site_list() {
     echo "<font color=#FF0000>(* modify within 5 days)</font> ";
 
     echo "<table class=\"wp-list-table widefat striped pages\">";
-    echo "<tr>";
-    echo "<td nowrap> PATH</td>";
-    echo "<td> VER </td>";
-    echo "<td> DBG <br> CHE</td>";
-    echo "<td bgcolor=#80C0C0> DB HOST <br> DB NAME</td>";
-    echo "<td bgcolor=#80C0C0> DB USER <br> DB PW </td>";
-    echo "<td bgcolor=#80C0C0> URL <br> -VHOST- </td>";
-    echo "<td bgcolor=#80C0C0> PREFIX <br> WPLANG </td>";
-    echo "<td> WRD DEF</td>";
-    echo "<td> LMT LOG</td>";
-    echo "<td> SUP CHE</td>";
-	echo "<td> Tiny DB</td>";
-    echo "<td> UPD CTL</td>";
-    echo "<td nowrap> wp-config.php <br> index.php";
-    echo "</tr>";
+    echo "<thead><tr>";
+    echo "<th nowrap> PATH</th>";
+    echo "<th> VER </th>";
+    echo "<th> DBG <br> CHE</th>";
+    echo "<th bgcolor=#80C0C0> DB HOST <br> DB NAME</th>";
+    echo "<th bgcolor=#80C0C0> DB USER <br> DB PW </th>";
+    echo "<th bgcolor=#80C0C0> URL <br> -VHOST- </th>";
+    echo "<th bgcolor=#80C0C0> PREFIX <br> WPLANG </th>";
+    echo "<th> WRD DEF</th>";
+    echo "<th> LMT LOG</th>";
+    echo "<th> SUP CHE</th>";
+	echo "<th> Tiny DB</th>";
+    echo "<th> UPD CTL</th>";
+    echo "<th nowrap> wp-config.php <br> index.php</th>";
+    echo "</tr></thead>";
 
     foreach ($result as $wpver) {
     		$wproot = substr($wpver, 0, strlen($wpver) - 23);
