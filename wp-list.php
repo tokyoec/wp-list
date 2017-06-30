@@ -56,6 +56,9 @@ class SaneDb
 
 // 設定画面用のHTML
 function wp_list_display_plugin_admin_page() {
+    echo '<div class="wrap">';
+    echo '<h1>WordPress DB and Site List Plugin</h1>';
+    echo '</div>';
     wp_list_display_db_list();
     wp_list_display_site_list();
 }
@@ -65,17 +68,14 @@ function wp_list_display_db_list() {
   	global $wpdb;
   	$sanedb = new SaneDb($wpdb);
 
-    echo '<div class="wrap">';
-    echo '<p>WordPress Site List プラグイン 管理画面</p>';
-    echo "[" . $sanedb->getDbHost() . "] db list<br>";;
-    echo '</div>';
+    echo "[" . $sanedb->getDbHost() . "] DB List<br>";;
 
-    echo "<table border=1>";
+    echo "<table class=\"wp-list-table widefat striped pages\">";
     echo "<tr>";
     echo "<td> DB Name </td>";
     echo "<td> WP home </td>";
-    echo "<td> WP blogname </td>";
-    echo "<td> WP blogdescription </td>";
+    echo "<td> WP blog name </td>";
+    echo "<td> WP blog description </td>";
     echo "</tr>";
 
     $db_host = $sanedb->getDbHost();
@@ -97,10 +97,16 @@ function wp_list_display_db_list() {
 
   	  echo "<tr>";
       echo "<td>$db_name</td>";
+  	  echo "<td>";
       get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, "home");
+  	  echo "</td>";
+  	  echo "<td>";
       get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, "blogname");
+  	  echo "</td>";
+  	  echo "<td>";
       get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, "blogdescription");
-      echo "</tr>";
+  	  echo "</td>";
+      echo "</tr>\n";
     }
     echo "</table>";
 
@@ -113,11 +119,12 @@ function wp_list_display_site_list() {
 		$cmd = "locate wp-includes/version.php";
 		exec($cmd, $result);
 
-    echo "<font color=#FF0000>modify within 5 days </font> ";
+    echo "<br><br>Site List ";
+    echo "<font color=#FF0000>(* modify within 5 days)</font> ";
 
-    echo "<table border=1>";
+    echo "<table class=\"wp-list-table widefat striped pages\">";
     echo "<tr>";
-    echo "<td> PATH<br>(wp plugin update) </td>";
+    echo "<td nowrap> PATH</td>";
     echo "<td> VER </td>";
     echo "<td> DBG <br> CHE</td>";
     echo "<td bgcolor=#80C0C0> DB HOST <br> DB NAME</td>";
@@ -127,13 +134,9 @@ function wp_list_display_site_list() {
     echo "<td> WRD DEF</td>";
     echo "<td> LMT LOG</td>";
     echo "<td> SUP CHE</td>";
-    echo "<td> BUD PRS </td>";
-    echo "<td> BB PRS </td>";
-    echo "<td> Tiny DB</td>";
-    echo "<td> GG PUB</td>";
+	echo "<td> Tiny DB</td>";
     echo "<td> UPD CTL</td>";
     echo "<td nowrap> wp-config.php <br> index.php";
-    echo "<td nowrap>ME<br>PO<br>UP</td>";
     echo "</tr>";
 
     foreach ($result as $wpver) {
@@ -147,7 +150,7 @@ function wp_list_display_site_list() {
     				} else {
     						echo "<tr>";
     				}
-    				echo "<td><a href = './index.php?op=listwp.php&wp_path=" . $wproot . "'>" . $wproot . "</a></td>";
+    				echo "<td nowrap>" . $wproot . "</td>";
     				show_wp_ver($wpver);
 
     				// show_path_exist($wproot . "/wp-admin/.svn");
@@ -159,50 +162,18 @@ function wp_list_display_site_list() {
     				show_plugin_ver($wproot . "/wp-content/plugins/wp-super-cache");
     				show_plugin_ver($wproot . "/wp-content/plugins/wordfence");
     				show_plugin_ver($wproot . "/wp-content/plugins/limit-login-attempts");
-    				show_plugin_ver($wproot . "/wp-content/plugins/buddypress");
-    				show_plugin_ver($wproot . "/wp-content/plugins/bbpress");
     				show_plugin_ver($wproot . "/wp-content/plugins/tinywebdb-api");
-    				show_plugin_ver($wproot . "/wp-content/plugins/google-publisher");
     				show_plugin_ver($wproot . "/wp-content/plugins/update-control");
     				$webroot = str_replace("/wordpress", "", $wproot);
     				echo "<td nowrap>";
     				echo show_file_info($wproot . "wp-config.php");
     				echo "<br>";
     				echo show_file_info($webroot . "index.php");
-    				echo "<br>";
-    				echo show_file_info($webroot . ".htaccess");
     				echo "</td>";
-    				show_htaccess_info($webroot . ".htaccess");
-    				echo "</tr>";
+    				echo "</tr>\n";
     		}
     }
     echo "</table>";
-    if(isset($_GET["wp_path"])) {
-    		wp_plugin_updata($_GET["wp_path"]);
-    }
-
-
-}
-
-// wp_plugin_updata
-// (Using wp tool)
-// 1. remove .svn path
-// 2. update wp plugin using wp
-
-function wp_plugin_updata($path) {
-
-		$result = array();
-		$cmd = "/usr/bin/wp plugin update --all --path='" . $path . "'";
-		$cmd2 = "find '" . $path . "' -name .svn -exec /bin/rm -fr {} \;";
-
-		exec( "$cmd2 2>&1 ", $result);
-		echo "<p>result info ...<br>\n";
-		echo join("<br>", $result);
-
-		echo "Try $cmd as " . get_current_user() . "(" . getmyuid() . "/" . getmygid() . ") ...<br>\n";
-		exec( "$cmd 2>&1 ", $result);
-		echo "<p>result info ...<br>\n";
-		echo join("<br>", $result);
 }
 
 // show_file_info
@@ -250,16 +221,15 @@ function show_wp_ver($v) {
 		echo "</td>";
 }
 
-function show_wp_info($wpconfig, $is_xoops) {
-		// echo "<td>";
+function show_wp_info($wpconfig) {
 		$sFile = file_get_contents($wpconfig);
 
 		echo "<br>";
 		preg_match("/WP_CACHE[\"']\, (.*)\)/", $sFile, $match1);
 		$db_host = $match1[1];
 		echo "<font color=#009F9F>" . $match1[1] . "</font>";
-    echo "</td>";
-    echo "<td>";
+		echo "</td>";
+		echo "<td>";
 
 		preg_match("/table_prefix  = [\"'](.*)[\"']\;/", $sFile, $match1);
 		$table_prefix = $match1[1];
@@ -281,6 +251,9 @@ function show_wp_info($wpconfig, $is_xoops) {
 		preg_match("/DB_USER[\"']\, [\"'](.*)[\"']/", $sFile, $match1);
 		$db_user = $match1[1];
 		echo $match1[1];
+
+		preg_match("/DB_PASSWORD[\"']\, [\"'](.*)[\"']/", $sFile, $match1);
+		$db_pass = $match1[1];
 		echo "<br>";
 		echo "****";
 		echo "</td>";
@@ -314,10 +287,9 @@ function show_wp_info($wpconfig, $is_xoops) {
 }
 
 function get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, $option_name) {
-    echo "<td>";
-    $db = mysqli_connect($db_host, $db_user, $db_pass) or echo "db open err!";
+    $db = mysqli_connect($db_host, $db_user, $db_pass) or print("db open err!");
     mysqli_set_charset($db, 'utf8') or die(mysqli_error($db));
-  	mysqli_select_db($db, $db_name) or echo "<font color=#FF0000>db select err!<font>";
+  	mysqli_select_db($db, $db_name) or print("<font color=#FF0000>db select err!<font>");
   	$result = mysqli_query($db, "SELECT option_value FROM " . $table_prefix . "options WHERE option_name='$option_name'");
   	if ($result) {
   		$myrow = mysqli_fetch_array($result);
@@ -332,12 +304,11 @@ function get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_pref
   		}
   	}
   	// mysqli_free_result($result);
-    echo "</td>";
 }
 
 function get_wpmu_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix) {
-		$db = mysqli_connect($db_host, $db_user, $db_pass) or echo "db open err!";
-		if (!mysqli_select_db($db, $db_name)) or echo "<font color=#FF0000>db select err!<font>";
+		$db = mysqli_connect($db_host, $db_user, $db_pass) or print("db open err!");
+		mysqli_select_db($db, $db_name) or print("<font color=#FF0000>db select err!<font>");
 		$result = mysqli_query($db, "SELECT domain, path FROM " . $table_prefix . "site ");
 		if ($result) {
 				$myrow = mysqli_fetch_array($result);
