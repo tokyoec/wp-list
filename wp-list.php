@@ -26,6 +26,15 @@ function wp_list_add_plugin_admin_menu() {
 		  '', // icon_url
           81 // position
      );
+
+     add_submenu_page(
+          'wp-list', // parent_slug
+          'WP Site List', // page_title
+          'Generate index', // menu_title
+          'administrator', // capability
+          'wp-list-reindex', // menu_slug
+          'wp_list_display_plugin_reindex_page' // function
+	);
 }
 
 class SaneDb
@@ -57,6 +66,12 @@ class SaneDb
 }
 
 // 設定画面用のHTML
+function wp_list_display_plugin_reindex_page() {
+    echo '<div class="wrap">';
+    echo '<h1>WordPress DB and Site List Reindex</h1>';
+    echo '</div>';
+}
+
 function wp_list_display_plugin_admin_page() {
     echo '<div class="wrap">';
     echo '<h1>WordPress DB and Site List Plugin</h1>';
