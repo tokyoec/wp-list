@@ -17,12 +17,14 @@ add_action( 'admin_menu', 'wp_list_add_plugin_admin_menu' );
 
 // アクションフックで呼ばれる関数
 function wp_list_add_plugin_admin_menu() {
-     add_options_page(
+     add_menu_page(
           'wp_list', // page_title
-          'WordPress Site List', // menu_title
+          'WP Site List', // menu_title
           'administrator', // capability
           'wp-list', // menu_slug
-          'wp_list_display_plugin_admin_page' // function
+          'wp_list_display_plugin_admin_page', // function
+		  '', // icon_url
+          81 // position
      );
 }
 
