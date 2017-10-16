@@ -12,6 +12,9 @@ Version: 1.0
 Author URI: https://github.com/chen420
 */
 
+include( plugin_dir_path( __FILE__ ) . 'wp-list-sub.php');
+include( plugin_dir_path( __FILE__ ) . 'wp-list-sub2.php');
+
 // アクションフック
 add_action( 'admin_menu', 'wp_list_add_plugin_admin_menu' );
 
@@ -19,7 +22,7 @@ add_action( 'admin_menu', 'wp_list_add_plugin_admin_menu' );
 function wp_list_add_plugin_admin_menu() {
      add_menu_page(
           'wp_list', // page_title
-          'WP Site List', // menu_title
+          'WP List DB', // menu_title
           'administrator', // capability
           'wp-list', // menu_slug
           'wp_list_display_plugin_admin_page', // function
@@ -29,11 +32,20 @@ function wp_list_add_plugin_admin_menu() {
 
      add_submenu_page(
           'wp-list', // parent_slug
-          'WP Site List', // page_title
-          'Generate index', // menu_title
+          'WP Site Locate', // page_title
+          'Generate locate', // menu_title
           'administrator', // capability
-          'wp-list-reindex', // menu_slug
-          'wp_list_display_plugin_reindex_page' // function
+          'wp-list-locate', // menu_slug
+          'wp_list_display_plugin_locate_page' // function
+	);
+
+     add_submenu_page(
+          'wp-list', // parent_slug
+          'WP Site Search', // page_title
+          'Generate search', // menu_title
+          'administrator', // capability
+          'wp-list-search', // menu_slug
+          'wp_list_display_plugin_search_page' // function
 	);
 }
 
@@ -66,18 +78,13 @@ class SaneDb
 }
 
 // 設定画面用のHTML
-function wp_list_display_plugin_reindex_page() {
-    echo '<div class="wrap">';
-    echo '<h1>WordPress DB and Site List Reindex</h1>';
-    echo '</div>';
-}
 
 function wp_list_display_plugin_admin_page() {
     echo '<div class="wrap">';
     echo '<h1>WordPress DB and Site List Plugin</h1>';
     echo '</div>';
     wp_list_display_db_list();
-    wp_list_display_site_list();
+
 }
 
 function wp_list_display_db_list() {
@@ -131,10 +138,7 @@ function wp_list_display_db_list() {
     mysqli_close($conn);
 }
 
-function wp_list_display_site_list() {
-    $result = array();
-		$cmd = "locate wp-includes/version.php";
-		exec($cmd, $result);
+function wp_list_display_site_list($result) {
 
     echo "<br><br>Site List ";
     echo "<font color=#FF0000>(* modify within 5 days)</font> ";
