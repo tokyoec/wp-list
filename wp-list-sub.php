@@ -18,7 +18,7 @@ function wp_list_display_plugin_search_page() {
 	echo '<h1>WordPress DB and Site List Reindex</h1>';
 	echo '</div>';
 
-	echo "<br>\n DOCUMENT_ROOT : " . $_SERVER["DOCUMENT_ROOT"] . " HOME : " . $_SERVER["HOME"] . " ... ";
+	echo "<br>\n DOCUMENT_ROOT : '" . $_SERVER["DOCUMENT_ROOT"] . "' HOME : '" . $_SERVER["HOME"] . "' ... ";
 	if (empty($_SERVER["DOCUMENT_ROOT"])) {
         $home = $_SERVER["HOME"];
 	} else {

@@ -32,8 +32,8 @@ function wp_list_add_plugin_admin_menu() {
 
      add_submenu_page(
           'wp-list', // parent_slug
-          'WP Site Locate', // page_title
-          'Generate locate', // menu_title
+          'WP List by Locate', // page_title
+          'List by locate', // menu_title
           'administrator', // capability
           'wp-list-locate', // menu_slug
           'wp_list_display_plugin_locate_page' // function
@@ -41,8 +41,8 @@ function wp_list_add_plugin_admin_menu() {
 
      add_submenu_page(
           'wp-list', // parent_slug
-          'WP Site Search', // page_title
-          'Generate search', // menu_title
+          'WP List by Search', // page_title
+          'List by search', // menu_title
           'administrator', // capability
           'wp-list-search', // menu_slug
           'wp_list_display_plugin_search_page' // function
@@ -269,9 +269,9 @@ function show_wp_info($wpconfig) {
 		} else {
 				echo "<td>";
 		}
-		preg_match("/DB_USER[\"']\, [\"'](.*)[\"']/", $sFile, $match1);
-		$db_user = $match1[1];
-		echo $match1[1];
+
+		$db_user = preg_match("/DB_USER[\"']\, [\"'](.*)[\"']/", $sFile, $match1) ? $match1[1] : 'chen420';
+		echo $db_user;
 
 		preg_match("/DB_PASSWORD[\"']\, [\"'](.*)[\"']/", $sFile, $match1);
 		$db_pass = $match1[1];
