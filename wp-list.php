@@ -155,8 +155,9 @@ function wp_list_display_site_list($result) {
     echo "<th> WRD DEF</th>";
     echo "<th> LMT LOG</th>";
     echo "<th> SUP CHE</th>";
-	echo "<th> Tiny DB</th>";
-    	echo "<th> WP List</th>";
+    echo "<th> Tiny DB</th>";
+    echo "<th> WP List</th>";
+    echo "<th> *** Index</th>";
     echo "<th nowrap> wp-config.php <br> index.php</th>";
     echo "</tr></thead>";
 
@@ -185,6 +186,7 @@ function wp_list_display_site_list($result) {
     				show_plugin_ver($wproot . "/wp-content/plugins/limit-login-attempts");
     				show_plugin_ver($wproot . "/wp-content/plugins/tinywebdb-api");
     				show_plugin_ver($wproot . "/wp-content/plugins/wp-list");
+    				show_plugin_ver($wproot . "/wp-content/plugins/index");
     				$webroot = str_replace("/wordpress", "", $wproot);
     				echo "<td nowrap>";
     				echo show_file_info($wproot . "wp-config.php");
