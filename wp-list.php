@@ -164,7 +164,8 @@ function wp_list_display_site_list($result) {
     foreach ($result as $wpver) {
     		$wproot = substr($wpver, 0, strlen($wpver) - 23);
     		$wpconfig = $wproot . "wp-config.php";
-    		if (file_exists($wpconfig) and substr($wproot, 0, 6) == "/home/") {
+    		if (file_exists($wpconfig) and 
+			(substr($wproot, 0, 6) == "/home/" or substr($wproot, 0, 9) == "/virtual/")) {
     				if (!file_exists($wpconfig)) {
     						echo "<tr bgcolor=#995555>";
     				} elseif (file_exists($wproot . "/wpmu-settings.php")) {
@@ -254,7 +255,7 @@ function show_wp_info($wpconfig) {
 		echo "</td>";
 		echo "<td>";
 
-		preg_match("/table_prefix  = [\"'](.*)[\"']\;/", $sFile, $match1);
+		preg_match("/table_prefix += [\"'](.*)[\"']\;/", $sFile, $match1);
 		$table_prefix = $match1[1];
 
 		preg_match("/DB_HOST[\"']\, [\"'](.*)[\"']\)/", $sFile, $match1);
