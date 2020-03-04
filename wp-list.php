@@ -300,7 +300,7 @@ function show_wp_info($wpconfig) {
 				get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, "home");
 				echo "<br nowrap>";
 				get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, "blogname");
-				echo "]";
+				echo "";
 		}
 		echo "</td>";
 		echo "<td>";
