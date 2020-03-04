@@ -161,11 +161,13 @@ function wp_list_display_site_list($result) {
     echo "<th nowrap> wp-config.php <br> index.php</th>";
     echo "</tr></thead>";
 
+    $i = 0;
     foreach ($result as $wpver) {
     		$wproot = substr($wpver, 0, strlen($wpver) - 23);
     		$wpconfig = $wproot . "wp-config.php";
     		if (file_exists($wpconfig) and 
 			(substr($wproot, 0, 6) == "/home/" or substr($wproot, 0, 9) == "/virtual/")) {
+				$i++;
     				if (!file_exists($wpconfig)) {
     						echo "<tr bgcolor=#995555>";
     				} elseif (file_exists($wproot . "/wpmu-settings.php")) {
@@ -173,7 +175,7 @@ function wp_list_display_site_list($result) {
     				} else {
     						echo "<tr>";
     				}
-    				echo "<td nowrap>" . $wproot . "</td>";
+    				echo "<td >($i)<br>" . $wproot . "</td>";
     				show_wp_ver($wpver);
 
     				// show_path_exist($wproot . "/wp-admin/.svn");
@@ -258,7 +260,7 @@ function show_wp_info($wpconfig) {
 		preg_match("/table_prefix += [\"'](.*)[\"']\;/", $sFile, $match1);
 		$table_prefix = $match1[1];
 
-		preg_match("/DB_HOST[\"']\, [\"'](.*)[\"']\)/", $sFile, $match1);
+		preg_match("/DB_HOST[\"']\, [\"'](.*)[\"']/", $sFile, $match1);
 		$db_host = $match1[1];
 		echo $match1[1];
 
@@ -296,7 +298,7 @@ function show_wp_info($wpconfig) {
 		} else {
 				echo "<td>";
 				get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, "home");
-				echo "<br>[";
+				echo "<br nowrap>";
 				get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, "blogname");
 				echo "]";
 		}
@@ -311,10 +313,12 @@ function show_wp_info($wpconfig) {
 }
 
 function get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, $option_name) {
-    $db = mysqli_connect($db_host, $db_user, $db_pass) or print("db open err!");
-    mysqli_set_charset($db, 'utf8') or die(mysqli_error($db));
-  	mysqli_select_db($db, $db_name) or print("<font color=#FF0000>db select err!<font>");
-  	$result = mysqli_query($db, "SELECT option_value FROM " . $table_prefix . "options WHERE option_name='$option_name'");
+    // $db   = mysqli_connect($db_host, $db_user, $db_pass) or print("db open err!");
+    $conn = mysqli_init();
+    mysqli_real_connect($conn, $db_host, $db_user, $db_pass, $db_name, 3306) or print("db open err!");
+    mysqli_set_charset($conn, 'utf8') or die(mysqli_error($conn));
+	// mysqli_select_db($db, $db_name) or print("<font color=#FF0000>db select err!<font>");
+  	$result = mysqli_query($conn, "SELECT option_value FROM " . $table_prefix . "options WHERE option_name='$option_name'");
   	if ($result) {
   		$myrow = mysqli_fetch_array($result);
   		switch ($option_name) {
