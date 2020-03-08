@@ -151,16 +151,16 @@ function wp_list_display_site_list($result) {
     echo "<th bgcolor=#80C0C0> DB HOST <br> DB NAME</th>";
     echo "<th bgcolor=#80C0C0> DB USER <br> DB PW </th>";
     echo "<th bgcolor=#80C0C0> URL <br> -VHOST- </th>";
-    echo "<th bgcolor=#80C0C0> PREFIX <br> WPLANG </th>";
+    echo "<th bgcolor=#80C0C0>PREFIX<br>LANG</th>";
     echo "<th> Akismet<br>";
-    echo " WRD DEF</th>";
-    echo "<th>LMT LOG<br>";
-    echo " SUP CHE</th>";
-    echo "<th>Goole AD<br>";
-    echo " Quick  AD</th>";
-    echo "<th> Tiny DB<br>";
-    echo " WP List</th>";
-    echo "<th> *** Index</th>";
+    echo "Wordfence</th>";
+    echo "<th>LMT_LOG<br>";
+    echo " SUP_CHE</th>";
+    echo "<th>GoogleAD<br>";
+    echo " Quick_AD</th>";
+    echo "<th>TinyDB<br>";
+    echo "WPList</th>";
+    echo "<th>*** Idx</th>";
     echo "<th nowrap> wp-config.php <br> index.php</th>";
     echo "</tr></thead>";
 
@@ -310,9 +310,9 @@ function show_wp_info($wpconfig) {
 				get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, "blogname");
 				echo "]<br>SUBDOMAIN_ -" . $match1[1] . "- ";
 		} else {
-				echo "<td>";
+				echo "<td nowrap>";
 				get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, "home");
-				echo "<br nowrap>";
+				echo "<br >";
 				get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, "blogname");
 				echo "";
 		}
