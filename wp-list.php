@@ -8,7 +8,7 @@ Plugin Name: WordPress Site List
 Plugin URI: https://github.com/tokyoec/wp-list
 Description: 管理画面にWordPressサイト一覧表示する。
 Author: Hong Chen
-Version: 1.0
+Version: 1.2
 Author URI: https://github.com/chen420
 */
 
@@ -152,20 +152,25 @@ function wp_list_display_site_list($result) {
     echo "<th bgcolor=#80C0C0> DB USER <br> DB PW </th>";
     echo "<th bgcolor=#80C0C0> URL <br> -VHOST- </th>";
     echo "<th bgcolor=#80C0C0> PREFIX <br> WPLANG </th>";
-    echo "<th> WRD DEF</th>";
-    echo "<th> LMT LOG</th>";
-    echo "<th> SUP CHE</th>";
-    echo "<th> Tiny DB</th>";
-    echo "<th> WP List</th>";
+    echo "<th> Akismet<br>";
+    echo " WRD DEF</th>";
+    echo "<th>LMT LOG<br>";
+    echo " SUP CHE</th>";
+    echo "<th>Goole AD<br>";
+    echo " Quick  AD</th>";
+    echo "<th> Tiny DB<br>";
+    echo " WP List</th>";
     echo "<th> *** Index</th>";
     echo "<th nowrap> wp-config.php <br> index.php</th>";
     echo "</tr></thead>";
 
+    $i = 0;
     foreach ($result as $wpver) {
     		$wproot = substr($wpver, 0, strlen($wpver) - 23);
     		$wpconfig = $wproot . "wp-config.php";
     		if (file_exists($wpconfig) and 
 			(substr($wproot, 0, 6) == "/home/" or substr($wproot, 0, 9) == "/virtual/")) {
+				$i++;
     				if (!file_exists($wpconfig)) {
     						echo "<tr bgcolor=#995555>";
     				} elseif (file_exists($wproot . "/wpmu-settings.php")) {
@@ -173,7 +178,7 @@ function wp_list_display_site_list($result) {
     				} else {
     						echo "<tr>";
     				}
-    				echo "<td nowrap>" . $wproot . "</td>";
+    				echo "<td >($i)<br>" . $wproot . "</td>";
     				show_wp_ver($wpver);
 
     				// show_path_exist($wproot . "/wp-admin/.svn");
@@ -182,12 +187,25 @@ function wp_list_display_site_list($result) {
     					echo filesize($wproot . "wp-content/debug.log") . "<br>";
     				}
     				show_wp_info($wpconfig);
-    				show_plugin_ver($wproot . "/wp-content/plugins/wp-super-cache");
-    				show_plugin_ver($wproot . "/wp-content/plugins/wordfence");
+				echo "<td>";
+    				show_plugin_ver($wproot . "/wp-content/plugins/akismet");echo "<br>";
+    				show_plugin_ver($wproot . "/wp-content/plugins/wordfence");echo "<br>";
+				echo "</td>";
+				echo "<td>";
+    				show_plugin_ver($wproot . "/wp-content/plugins/wp-super-cache");echo "<br>";
     				show_plugin_ver($wproot . "/wp-content/plugins/limit-login-attempts");
-    				show_plugin_ver($wproot . "/wp-content/plugins/tinywebdb-api");
+				echo "</td>";
+				echo "<td>";
+    				show_plugin_ver($wproot . "/wp-content/plugins/google-publisher");echo "<br>";
+    				show_plugin_ver($wproot . "/wp-content/plugins/quick-adsense");
+				echo "</td>";
+				echo "<td>";
+    				show_plugin_ver($wproot . "/wp-content/plugins/tinywebdb-api");echo "<br>";
     				show_plugin_ver($wproot . "/wp-content/plugins/wp-list");
+				echo "</td>";
+				echo "<td>";
     				show_plugin_ver($wproot . "/wp-content/plugins/index");
+				echo "</td>";
     				$webroot = str_replace("/wordpress", "", $wproot);
     				echo "<td nowrap>";
     				echo show_file_info($wproot . "wp-config.php");
@@ -215,7 +233,6 @@ function show_file_info($fn) {
 }
 
 function show_plugin_ver($path) {
-		echo "<td>";
 		if (file_exists($path)) {
 				if (file_exists($path . "/readme.txt")) {
 						$sFile = file_get_contents($path . "/readme.txt");
@@ -231,7 +248,6 @@ function show_plugin_ver($path) {
 		} else {
 				echo " ";
 		}
-		echo "</td>";
 }
 
 function show_wp_ver($v) {
@@ -258,7 +274,7 @@ function show_wp_info($wpconfig) {
 		preg_match("/table_prefix += [\"'](.*)[\"']\;/", $sFile, $match1);
 		$table_prefix = $match1[1];
 
-		preg_match("/DB_HOST[\"']\, [\"'](.*)[\"']\)/", $sFile, $match1);
+		preg_match("/DB_HOST[\"']\, [\"'](.*)[\"']/", $sFile, $match1);
 		$db_host = $match1[1];
 		echo $match1[1];
 
@@ -296,9 +312,9 @@ function show_wp_info($wpconfig) {
 		} else {
 				echo "<td>";
 				get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, "home");
-				echo "<br>[";
+				echo "<br nowrap>";
 				get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, "blogname");
-				echo "]";
+				echo "";
 		}
 		echo "</td>";
 		echo "<td>";
@@ -311,10 +327,12 @@ function show_wp_info($wpconfig) {
 }
 
 function get_wp_option_value($db_host, $db_name, $db_user, $db_pass, $table_prefix, $option_name) {
-    $db = mysqli_connect($db_host, $db_user, $db_pass) or print("db open err!");
-    mysqli_set_charset($db, 'utf8') or die(mysqli_error($db));
-  	mysqli_select_db($db, $db_name) or print("<font color=#FF0000>db select err!<font>");
-  	$result = mysqli_query($db, "SELECT option_value FROM " . $table_prefix . "options WHERE option_name='$option_name'");
+    // $db   = mysqli_connect($db_host, $db_user, $db_pass) or print("db open err!");
+    $conn = mysqli_init();
+    mysqli_real_connect($conn, $db_host, $db_user, $db_pass, $db_name, 3306) or print("db open err!");
+    mysqli_set_charset($conn, 'utf8') or die(mysqli_error($conn));
+	// mysqli_select_db($db, $db_name) or print("<font color=#FF0000>db select err!<font>");
+  	$result = mysqli_query($conn, "SELECT option_value FROM " . $table_prefix . "options WHERE option_name='$option_name'");
   	if ($result) {
   		$myrow = mysqli_fetch_array($result);
   		switch ($option_name) {
